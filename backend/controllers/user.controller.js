@@ -1,5 +1,5 @@
 
-import { User, User } from "../models/user.model";
+import { User} from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import  jwt  from "jsonwebtoken";
 
@@ -7,7 +7,7 @@ import  jwt  from "jsonwebtoken";
 export const Register = async (req, res) => {
     
     try {
-        const { fullname, email, phoneNumber, password, role } = req.body;
+        const { fullname, email, phoneNumber, password, role  } = req.body;
         if (!fullname || !email || !phoneNumber || !password || !role) {
             return res.status(400).json({
                 message: "Something is missing",
@@ -34,7 +34,7 @@ export const Register = async (req, res) => {
         })
 
         return res.status(201).json({
-            message: "Account ctreated successfully",
+            message: "Account created successfully",
             success:true
         })
 
@@ -119,15 +119,13 @@ export const ProfileUpdate = async (req, res) => {
         const { fullname, email, phoneNumber, bio, skills } = req.body;
         const file = req.file;
 
-         if (!fullname || !email || !phoneNumber || !bio || !skills) {
-            return res.status(400).json({
-                message: "Something is missing",
-                success:false
-            })
+        
+        let skillArray;
+        if (skills) {
+             skillArray = skills.split(",")
         }
-
-        const skillArray = skills.split(",")
-        const userId = req._id;
+       // console.log(req.id);
+        const userId = req.id;
         let user = await User.findById(userId);
 
         if (!user) {
@@ -138,12 +136,12 @@ export const ProfileUpdate = async (req, res) => {
         }
 
         // updating data
-        user.fullname = fullname;
-        user.email = email;
-        user.phoneNumber = phoneNumber;
-        user.profile.bio = bio;
-        user.profile.skills = skillArray;
-
+        if (fullname) user.fullname = fullname;
+        if (email) user.email = email;
+        if (phoneNumber) user.phoneNumber = phoneNumber;
+        if (bio) user.profile.bio = bio;
+        if (skills) user.profile.skills = skillArray;
+        
         await user.save(); 
 
          user = {
