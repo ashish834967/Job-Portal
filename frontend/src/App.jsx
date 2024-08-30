@@ -3,7 +3,7 @@ import "./App.css";
 function App() {
   return (
     <>
-      <h1>Welcome to job portal</h1>
+      <h1>WELCOME TO JOB PORTAL</h1>
     </>
   );
 }
